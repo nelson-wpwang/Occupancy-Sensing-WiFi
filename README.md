@@ -23,9 +23,8 @@ For every time flashing the device:
 
 7. Go to Component Config -> FREERTOS -> Tick Rate -> Set to 1000Hz
 
-8. Go to Component Config -> Genreal 
 
-9. Exit and save everything. 
+8. Exit and save everything. 
 
 
 Performing the Experiment: 
