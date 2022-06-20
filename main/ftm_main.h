@@ -32,12 +32,24 @@ typedef struct {
 } wifi_scan_arg_t;
 
 typedef struct {
-    struct arg_lit *mode;
+    // struct arg_lit *mode;
     // struct arg_int *channel;
+    // struct arg_int *repeat_count;
+    // struct arg_int *frm_count;
+    // struct arg_int *burst_period;
+    // struct arg_str *ssid;
+    // struct arg_end *end;
     struct arg_int *repeat_count;
+
+    struct arg_lit *initiator;
     struct arg_int *frm_count;
     struct arg_int *burst_period;
     struct arg_str *ssid;
+    /* FTM Responder */
+    struct arg_lit *responder;
+    struct arg_lit *enable;
+    struct arg_lit *disable;
+    struct arg_int *offset;
     struct arg_end *end;
 } wifi_ftm_args_t;
 
@@ -48,6 +60,42 @@ wifi_ftm_args_t ftm_args;
 
 csi_ftm_responder_table csi_ftm_pass;
 int csi_collected_channel;
+
+// new commands
+
+// wifi_config_t g_ap_config = {
+//     .ap.max_connection = 4,
+//     .ap.authmode = WIFI_AUTH_WPA2_PSK,
+//     .ap.ftm_responder = true
+// };
+
+#define ETH_ALEN 6
+#define MAX_CONNECT_RETRY_ATTEMPTS  5
+
+static uint32_t g_rtt_est, g_dist_est;
+bool g_ap_started;
+uint8_t g_ap_channel;
+uint8_t g_ap_bssid[ETH_ALEN];
+
+static int s_retry_num = 0;
+
+static int g_report_lvl =
+#ifdef CONFIG_ESP_FTM_REPORT_SHOW_DIAG
+    BIT0 |
+#endif
+#ifdef CONFIG_ESP_FTM_REPORT_SHOW_RTT
+    BIT1 |
+#endif
+#ifdef CONFIG_ESP_FTM_REPORT_SHOW_T1T2T3T4
+    BIT2 |
+#endif
+#ifdef CONFIG_ESP_FTM_REPORT_SHOW_RSSI
+    BIT3 |
+#endif
+0;
+
+//end 
+//
 
 static bool s_reconnect = true;
 static const char *TAG_STA = "ftm_station";
@@ -73,14 +121,19 @@ wifi_ap_record_t *g_ap_list_buffer;
 uint8_t primary_channel;
 wifi_second_chan_t secondary_channel;
 
-void wifi_connected_handler(void *arg, esp_event_base_t event_base,
-                                   int32_t event_id, void *event_data);
+// void wifi_connected_handler(void *arg, esp_event_base_t event_base,
+//                                    int32_t event_id, void *event_data);
 
-void disconnect_handler(void *arg, esp_event_base_t event_base,
-                               int32_t event_id, void *event_data);
+// void disconnect_handler(void *arg, esp_event_base_t event_base,
+//                                int32_t event_id, void *event_data);
 
-void ftm_report_handler(void *arg, esp_event_base_t event_base,
-                               int32_t event_id, void *event_data);
+void event_handler(void *arg, esp_event_base_t event_base,
+                          int32_t event_id, void *event_data);
+
+// void ftm_report_handler(void *arg, esp_event_base_t event_base,
+//                                int32_t event_id, void *event_data);
+
+void ftm_process_report(void);
 
 bool wifi_cmd_sta_join(const char *ssid, const char *pass);
 
