@@ -115,18 +115,5 @@ void example_espnow_deinit(example_espnow_send_param_t *send_param);
 
 esp_err_t espnow_send_command (uint8_t *mac_addr, uint8_t channel);
 
-//utils for searching and storing mac address.
-// struct Node 
-// { 
-//     uint8_t *mac_addr[6]; 
-//     struct Node* next; 
-// }; 
-
-// extern struct Node* head = NULL; 
-
-// extern void push(struct Node** head_ref, uint8_t *new_mac_addr);
-
-// extern bool search(struct Node* head, uint8_t *search_mac_addr);
-
 
 #endif

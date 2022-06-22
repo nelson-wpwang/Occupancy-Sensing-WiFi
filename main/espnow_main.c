@@ -25,18 +25,10 @@
 #include "math.h"
 
 #include "espnow_main.h"
-// #include "csi_main.h"
-// #include "utils.h"
 
 
 #include "lwip/err.h"
 #include "lwip/sys.h"
-
-// #include "esp_private/wifi.h"
-
-// #include "soc/soc.h"
-// #include "soc/rtc_cntl_reg.h"
-//WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable brownout detector
 
 
 static xQueueHandle s_example_espnow_queue;
@@ -52,7 +44,6 @@ int ESPNOW_PACKET_LEN = 12;
 int SEND_DELAY = 20000;
 uint16_t ESP_CHANNEL = 1;
 float csi_allchan[13][52];
-// bool STA_MODE;
 
 esp_interface_t espnow_set_peer_ifidx(void)
 {
@@ -328,13 +319,6 @@ void data_process_task(void *pvParameter)
 
                 ESP_LOGI(TAG, "Receive %dth unicast data from: "MACSTR", len: %d", recv_seq, MAC2STR(recv_cb->mac_addr), recv_cb->data_len);
 
-                //adding the sender's mac address into list so that csi can filter.
-                // bool result = search(head, recv_cb->mac_addr);
-                // if (head == NULL || result == false)
-                // {
-                //     push(&head, recv_cb->mac_addr);
-                // }
-
                 received_broadcast_message = 1;
                 unicast_delivered = 1;
                 current_recv_seq = recv_seq;
@@ -357,43 +341,12 @@ void data_process_task(void *pvParameter)
                     send_param->channel = 1;
                 }
 
-                // if (current_channel < recv_channel){
-                //     if (send_param->channel > 13){
-                //                     ESP_LOGI(TAG,"Transmission done\n");
-                //                     example_espnow_deinit(send_param);
-                //                     vTaskDelete(NULL);
-                //     }
-
-                //     esp_wifi_set_channel((uint8_t)send_param->channel, secondary_channel);
-                //     ESP_LOGI(TAG,"Setting into new channel before sending new message: %d\n", send_param->channel);
-
-                //     espnow_manage_peer(recv_cb->mac_addr, send_param->channel);
-                // }
-
-                /* Start sending unicast ESPNOW data. */
-                // memcpy(send_param->dest_mac, recv_cb->mac_addr, ESP_NOW_ETH_ALEN);
-                // example_espnow_data_prepare(send_param);
-                // unicast_delivered = 0;
-
-                // if (espnow_transmit(send_param->dest_mac, send_param) == ESP_OK)
                 if (true)
                 {
-                    // ESP_LOGI(TAG, "Successfully send unicast data to: "MACSTR", channel: %d\n", MAC2STR(send_param->dest_mac), recv_channel);
-                    // vTaskDelay(200 / portTICK_RATE_MS);
-
-                    /*set into next channel if received message is in the same channel */
-                    // if (current_channel == recv_channel){
-                    //     if (send_param->channel > 13){
-                    //                 ESP_LOGI(TAG,"Transmission done\n");
-                    //                 example_espnow_deinit(send_param);
-                    //                 vTaskDelete(NULL);
-                    //     }
-
-                        esp_wifi_set_channel(send_param->channel, secondary_channel);
-                        ESP_LOGI(TAG,"Setting into new channel: %d\n", send_param->channel);
-                    
-                        espnow_manage_peer(recv_cb->mac_addr, send_param->channel);
-                    // } 
+                    esp_wifi_set_channel(send_param->channel, secondary_channel);
+                    ESP_LOGI(TAG,"Setting into new channel: %d\n", send_param->channel);
+                
+                    espnow_manage_peer(recv_cb->mac_addr, send_param->channel);
                 }
                 break;
             }
@@ -480,21 +433,11 @@ esp_err_t espnow_send_command (uint8_t *mac_addr, uint8_t channel)
 {
     example_espnow_send_param_t *send_param;
 
-    /* Add broadcast peer information to peer list. */
-        // esp_now_peer_info_t *peer = malloc(sizeof(esp_now_peer_info_t));
-        // if (peer == NULL) {
-        //     ESP_LOGE(TAG, "Malloc peer information fail");
-        //     esp_now_deinit();
-        //     return ESP_FAIL;
-        // }
-
     uint8_t primary_channel;
     wifi_second_chan_t secondary_channel;
     int current_channel;
 
     esp_wifi_get_channel(&primary_channel, &secondary_channel);
-    // current_channel = (int)primary_channel;
-    // esp_wifi_set_channel(channel, secondary_channel);
 
     espnow_manage_peer(mac_addr, primary_channel);
 
