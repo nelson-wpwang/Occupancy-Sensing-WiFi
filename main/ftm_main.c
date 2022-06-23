@@ -35,8 +35,8 @@ const int FTM_FAILURE_BIT = BIT1;
 
 example_espnow_send_param_t *send_param;
 
-uint32_t report_est_rtt;
-uint32_t report_est_dist;
+// uint32_t report_est_rtt;
+// uint32_t report_est_dist;
 
 wifi_config_t g_ap_config = {
     .ap.max_connection = 4,
@@ -44,6 +44,7 @@ wifi_config_t g_ap_config = {
     .ap.ftm_responder = true
 };
 
+uint8_t ftm_channel = 1;
 
 wifi_ftm_initiator_cfg_t ftmi_cfg = {
     .frm_count = 32,
@@ -97,14 +98,22 @@ void ftm_process_report(void)
 {
     int i;
     char *log = malloc(200);
+    char old_log_buff[2048];
+    size_t len = 0;
 
     if (!g_report_lvl)
         return;
-
+  
     if (!log) {
         ESP_LOGE(TAG_STA, "Failed to alloc buffer for FTM report");
         return;
     }
+
+    //old code from V4.3.3-beta
+    len+= snprintf(old_log_buff + len, sizeof(old_log_buff) - len,"FTM_DATA,%d," MACSTR ",%d,%d.%02d, ",
+               ftm_channel, MAC2STR(csi_ftm_pass.resp_mac), g_rtt_est, g_dist_est / 100, g_dist_est % 100);
+    len += snprintf(old_log_buff + len, sizeof(old_log_buff) - len, "\"[");
+    //
 
     bzero(log, 200);
     sprintf(log, "%s%s%s%s", g_report_lvl & BIT0 ? " Diag |":"", g_report_lvl & BIT1 ? "   RTT   |":"",
@@ -130,7 +139,17 @@ void ftm_process_report(void)
             log_ptr += sprintf(log_ptr, "%6d  |", g_ftm_report[i].rssi);
         }
         ESP_LOGI(TAG_STA, "|%s", log);
+
+        //old code from V4.3.3-beta
+        len += snprintf(old_log_buff + len, sizeof(old_log_buff) - len, "%4u,", g_ftm_report[i].rtt);
+        //
     }
+    //old code from V4.3.3-beta
+    len += snprintf(old_log_buff + len, sizeof(old_log_buff) - len, "%4u",g_ftm_report[i].rtt);
+    len += snprintf(old_log_buff + len, sizeof(old_log_buff) - len, "]\"\n");
+    ets_printf("%s",old_log_buff);
+    //
+
     free(log);
 }
 
@@ -339,7 +358,6 @@ int wifi_cmd_ftm(int argc, char **argv)
     int nerrors = arg_parse(argc, argv, (void **) &ftm_args);
     // uint8_t count = ftm_args.frm_count->ival[0];
     // uint8_t ftm_channel = ftm_args.channel->ival[0];
-    uint8_t ftm_channel = 1;
     uint8_t ftm_repeat = ftm_args.repeat_count->ival[0];
     wifi_ap_record_t *ap_record;
     EventBits_t bits;
