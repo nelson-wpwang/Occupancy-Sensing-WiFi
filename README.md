@@ -20,3 +20,6 @@ Performing the Experiment:
 1. Command: idf.py -p [port that ESP32S2 is using] flash monitor
 2. Save the logging to files: Ctrl T, then Ctrl L to enable logging, when ended, Ctrl T and Ctrl L to disable and the log is autosaved.
 3. *Exit the monitor mode: Ctrl ], exit at any time, this will disable logging and autosave the logged info to file. 
+
+
+Save the logging to files: Ctrl T, then Ctrl L to enable logging, when ended, Ctrl T and Ctrl L to disable and the log is autosaved.
