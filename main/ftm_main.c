@@ -147,8 +147,8 @@ void ftm_process_report(void)
     //old code from V4.3.3-beta
     len += snprintf(old_log_buff + len, sizeof(old_log_buff) - len, "%4u",g_ftm_report[i].rtt);
     len += snprintf(old_log_buff + len, sizeof(old_log_buff) - len, "]\"\n");
-    ESP_LOGI(TAG_STA, "%s", old_log_buff);
-//     ets_printf("%s",old_log_buff);
+    // ESP_LOGI(TAG_STA, "%s", old_log_buff);
+    ets_printf("%s",old_log_buff);
     //
 
     free(log);
