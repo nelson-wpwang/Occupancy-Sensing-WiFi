@@ -98,7 +98,7 @@ void ftm_process_report(void)
 {
     int i;
     char *log = malloc(200);
-    char old_log_buff[2048];
+    char *old_log_buff[2048];
     size_t len = 0;
 
     if (!g_report_lvl)
@@ -147,10 +147,12 @@ void ftm_process_report(void)
     //old code from V4.3.3-beta
     len += snprintf(old_log_buff + len, sizeof(old_log_buff) - len, "%4u",g_ftm_report[i].rtt);
     len += snprintf(old_log_buff + len, sizeof(old_log_buff) - len, "]\"\n");
-    ets_printf("%s",old_log_buff);
+    ESP_LOGI(TAG_STA, "%s", old_log_buff);
+//     ets_printf("%s",old_log_buff);
     //
 
     free(log);
+    free(old_log_buff);
 }
 
 bool wifi_cmd_sta_join(const char *ssid, const char *pass)
