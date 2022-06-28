@@ -8,10 +8,10 @@ Steps for Setup:
 4. Set ESP32-S2 as compiling target using command: idf.py set-target esp32s2 
 5. Config Parameters with command: idf.py menuconfig
 6. Inside config window, go to: 
-     a. Component Config -> WiFi -> enable CSI, disable WiFi TX AMPTU, disable WiFi RX AMPDU, enable Fine Time Measurement. (press space to enable/disable)
-     b. Component Config -> FREERTOS -> Tick Rate -> Set to 1000Hz
-     c. Example configuration -> enable FTM Report logging (Show RTT values only)
-     d. Save and Exit 
+a. Component Config -> WiFi -> enable CSI, disable WiFi TX AMPTU, disable WiFi RX AMPDU, enable Fine Time Measurement. (press space to enable/disable)
+b. Component Config -> FREERTOS -> Tick Rate -> Set to 1000Hz
+c. Example configuration -> enable FTM Report logging (Show RTT values only)
+d. Save and Exit 
 
 
 
