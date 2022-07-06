@@ -49,7 +49,7 @@ uint8_t ftm_channel = 1;
 wifi_ftm_initiator_cfg_t ftmi_cfg = {
     .frm_count = 32,
     .burst_period = 2,
-    .repeat_count = 300,
+//     .repeat_count = 300,
 };
 
 void event_handler(void *arg, esp_event_base_t event_base,
